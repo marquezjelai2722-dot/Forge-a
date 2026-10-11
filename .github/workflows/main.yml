@@ -14,12 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract ZIP into repository
+      - name: Extract Forge
         run: |
-          unzip -o Forge-connected-project.zip -d .
-          rm -rf Forge-connected-project
+          set -e
+          test -f Forge-connected-project.zip
+          mkdir -p /tmp/forge-extract
+          unzip -o Forge-connected-project.zip -d /tmp/forge-extract
+          cp -r /tmp/forge-extract/Forge-connected-project/. .
           git add -A
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Extract Forge project files" || echo "No changes to commit"
-          git push
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Extract Forge project files"
+            git push
+          fi
