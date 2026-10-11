@@ -1,2 +1,24 @@
-- name: Unzip Forge
-  run: unzip -o Forge-connected-project.zip -d .
+name: Unzip Forge Project
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Forge-connected-project.zip'
+      - '.github/workflows/main.yml'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Extract Forge ZIP
+        run: unzip -o Forge-connected-project.zip -d .
+
+      - name: Verify extracted files
+        run: |
+          ls -la
+          ls -la Forge-connected-project
