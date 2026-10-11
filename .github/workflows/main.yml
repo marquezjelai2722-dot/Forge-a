@@ -1,24 +1,25 @@
-name: Unzip Forge Project
+name: Extract Forge ZIP
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'Forge-connected-project.zip'
-      - '.github/workflows/main.yml'
+
+permissions:
+  contents: write
 
 jobs:
-  unzip:
+  extract:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract Forge ZIP
-        run: unzip -o Forge-connected-project.zip -d .
-
-      - name: Verify extracted files
+      - name: Extract ZIP into repository
         run: |
-          ls -la
-          ls -la Forge-connected-project
+          unzip -o Forge-connected-project.zip -d .
+          rm -rf Forge-connected-project
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Extract Forge project files" || echo "No changes to commit"
+          git push
