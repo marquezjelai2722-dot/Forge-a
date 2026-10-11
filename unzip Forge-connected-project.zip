@@ -1,4 +1,0 @@
-- name: Unzip Forge Project
-  run: |
-    mkdir -p Forge
-    unzip -o Forge-connected-project.zip -d Forge
