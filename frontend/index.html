@@ -1,154 +1,665 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090a0f"><title>Forge AI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090a0f">
+<title>Forge AI</title>
+
 <style>
-:root{color-scheme:dark;--bg:#090a0f;--panel:#141620;--line:#292d3b;--text:#f4f4f7;--muted:#9da3b5;--accent:#9b75ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -10%,#28203e,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif;height:100dvh;overflow:hidden}button,textarea,select{font:inherit}button{cursor:pointer;color:inherit}.app{height:100dvh;display:grid;grid-template-columns:240px 1fr}.side{padding:18px 13px;background:#0c0d13;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:15px}.brand{display:flex;align-items:center;gap:10px;padding:5px}.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(145deg,#c1aaff,#7048d6);display:grid;place-items:center;font-size:25px;font-weight:900}.brand strong{letter-spacing:2.5px;font-size:19px}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px}.new,.nav{border:1px solid var(--line);background:#141620;border-radius:12px;padding:11px;text-align:left}.new{background:#211a32;border-color:#4b3b70}.nav{background:transparent;border-color:transparent;color:#c8cad6}.nav.active,.nav:hover{background:#191b26;border-color:var(--line)}.profile{margin-top:auto;border-top:1px solid var(--line);padding:14px 6px;display:flex;align-items:center;gap:10px}.avatar,.mini{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#29223d;color:#d2c3ff;font-weight:800}.muted{color:var(--muted);font-size:12px}.main{display:flex;flex-direction:column;min-width:0;min-height:0}.top{height:62px;flex:none;border-bottom:1px solid #242633;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:#0b0c12bb}.online{font-size:11px;color:#a9e4c0}.online:before{content:"";display:inline-block;width:7px;height:7px;background:#62d995;border-radius:50%;margin-right:7px}.mobile{display:none}.content{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center}.chat{width:min(820px,100%);padding:24px;flex:1;display:flex;flex-direction:column;gap:16px}.welcome{margin:auto 0;text-align:center;padding:24px 0}.mark{margin:0 auto 18px;width:65px;height:65px;border:1px solid #59458a;border-radius:22px;background:#1d182b;display:grid;place-items:center;color:#c9b7ff;font-size:34px}.welcome h1{font-size:clamp(27px,4vw,38px);letter-spacing:-1px;margin:0 0 8px}.welcome p{color:var(--muted);margin:0 auto 24px}.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:550px;margin:auto}.suggestion{border:1px solid var(--line);background:#12141c;border-radius:14px;padding:13px;text-align:left}.suggestion:hover{border-color:#7657b6}.suggestion span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.msg{display:flex;gap:10px;align-items:flex-start}.msg.user{flex-direction:row-reverse}.bubble{white-space:pre-wrap;overflow-wrap:anywhere;max-width:88%;padding:12px 15px;background:#141620;border:1px solid #282b39;border-radius:4px 15px 15px 15px;line-height:1.65}.user .bubble{background:#211b32;border-color:#46365f;border-radius:15px 4px 15px 15px}.composer-wrap{width:min(820px,100%);padding:0 24px max(16px,env(safe-area-inset-bottom));margin:auto auto 0}.composer{border:1px solid #35394a;background:#13151e;border-radius:18px;padding:10px}.composer textarea{width:100%;resize:none;max-height:150px;min-height:44px;background:transparent;border:0;outline:0;color:var(--text);padding:7px}.bottom{display:flex;align-items:center;justify-content:space-between;padding:0 3px}.hint{font-size:10px;color:#858b9d}.send,.save{border:0;border-radius:11px;background:var(--accent);color:#100c1a;padding:9px 15px;font-weight:800}.fine{text-align:center;font-size:10px;color:#72788a;margin-top:7px}.panel{width:min(650px,100%);padding:26px 24px}.panel h1{font-size:28px;margin:0 0 4px}.panel p{color:var(--muted)}.card{border:1px solid var(--line);background:#12141c;border-radius:15px;padding:18px;margin:17px 0}.field{margin:16px 0}.field label{display:flex;justify-content:space-between;margin-bottom:8px}.field select{width:100%;padding:11px;background:#0c0d13;border:1px solid var(--line);border-radius:10px;color:var(--text)}input[type=range]{width:100%;accent-color:var(--accent)}.note{font-size:12px;padding:12px;border:1px solid #514326;background:#282216;border-radius:11px;color:#e6d2a2}
+:root {
+  color-scheme: dark;
+  --bg:#090a0f;
+  --panel:#141620;
+  --line:#292d3b;
+  --text:#f4f4f7;
+  --muted:#9da3b5;
+  --accent:#9b75ff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:radial-gradient(ellipse at 70% -10%,#28203e,transparent 45%),var(--bg);
+  color:var(--text);
+  font:15px/1.5 system-ui,sans-serif;
+  height:100dvh;
+  overflow:hidden;
+}
+button,textarea,input,select { font:inherit; }
+button { cursor:pointer;color:inherit; }
+input,select,textarea { color:var(--text); }
+button:disabled { opacity:.5;cursor:wait; }
 
-.auth-overlay{position:fixed;z-index:20;inset:0;background:#07080deF;display:grid;place-items:center;padding:18px}
-.auth-card{width:min(420px,100%);background:#141620;border:1px solid #34384a;border-radius:20px;padding:24px;box-shadow:0 25px 80px #0009}
-.auth-card h2{margin:0 0 5px;font-size:25px}.auth-card p{color:var(--muted);font-size:13px}
-.auth-card input{display:block;width:100%;margin:12px 0;padding:12px;background:#0c0d13;border:1px solid var(--line);border-radius:10px;color:var(--text)}
-.auth-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.auth-actions button{border:1px solid var(--line);border-radius:10px;padding:10px 13px;background:#211a32}
-.auth-actions .primary{background:var(--accent);color:#100c1a;border:0;font-weight:800}
-.auth-error{color:#ffaaa8;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.auth-note{font-size:11px;color:var(--muted);margin-top:14px}
+.app {
+  height:100dvh;
+  display:grid;
+  grid-template-columns:240px 1fr;
+}
+.side {
+  padding:18px 13px;
+  background:#0c0d13;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+.brand { display:flex;align-items:center;gap:10px;padding:5px; }
+.logo {
+  width:40px;height:40px;border-radius:13px;
+  background:linear-gradient(145deg,#c1aaff,#7048d6);
+  display:grid;place-items:center;font-size:25px;font-weight:900;
+}
+.brand strong { letter-spacing:2.5px;font-size:19px; }
+.brand small {
+  display:block;color:var(--muted);font-size:9px;letter-spacing:2px;
+}
+.new,.nav {
+  border:1px solid var(--line);
+  background:#141620;
+  border-radius:12px;
+  padding:11px;
+  text-align:left;
+}
+.new { background:#211a32;border-color:#4b3b70; }
+.nav { background:transparent;border-color:transparent;color:#c8cad6; }
+.nav.active,.nav:hover { background:#191b26;border-color:var(--line); }
+.profile {
+  margin-top:auto;border-top:1px solid var(--line);
+  padding:14px 6px;display:flex;align-items:center;gap:10px;
+}
+.avatar,.mini {
+  width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;
+  background:#29223d;color:#d2c3ff;font-weight:800;
+  flex:none;
+}
+.muted { color:var(--muted);font-size:12px; }
+.main { display:flex;flex-direction:column;min-width:0;min-height:0; }
+.top {
+  height:62px;flex:none;border-bottom:1px solid #242633;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;background:#0b0c12bb;
+}
+.online { font-size:11px;color:#a9e4c0; }
+.online:before {
+  content:"";display:inline-block;width:7px;height:7px;
+  background:#62d995;border-radius:50%;margin-right:7px;
+}
+.online.error { color:#ff9c9c; }
+.online.error:before { background:#ff7777; }
+.mobile { display:none; }
+.content {
+  flex:1;min-height:0;overflow:auto;
+  display:flex;flex-direction:column;align-items:center;
+}
+.chat {
+  width:min(820px,100%);padding:24px;
+  flex:1;display:flex;flex-direction:column;gap:16px;
+}
+.welcome { margin:auto 0;text-align:center;padding:24px 0; }
+.mark {
+  margin:0 auto 18px;width:65px;height:65px;
+  border:1px solid #59458a;border-radius:22px;background:#1d182b;
+  display:grid;place-items:center;color:#c9b7ff;font-size:34px;
+}
+.welcome h1 {
+  font-size:clamp(27px,4vw,38px);letter-spacing:-1px;margin:0 0 8px;
+}
+.welcome p { color:var(--muted);margin:0 auto 24px; }
+.suggestions {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;max-width:550px;margin:auto;
+}
+.suggestion {
+  border:1px solid var(--line);background:#12141c;
+  border-radius:14px;padding:13px;text-align:left;
+}
+.suggestion:hover { border-color:#7657b6; }
+.suggestion span {
+  display:block;color:var(--muted);font-size:12px;margin-top:3px;
+}
+.msg { display:flex;gap:10px;align-items:flex-start; }
+.msg.user { flex-direction:row-reverse; }
+.bubble {
+  white-space:pre-wrap;overflow-wrap:anywhere;max-width:88%;
+  padding:12px 15px;background:#141620;border:1px solid #282b39;
+  border-radius:4px 15px 15px 15px;line-height:1.65;
+}
+.user .bubble {
+  background:#211b32;border-color:#46365f;
+  border-radius:15px 4px 15px 15px;
+}
+.composer-wrap {
+  width:min(820px,100%);
+  padding:0 24px max(16px,env(safe-area-inset-bottom));
+  margin:auto auto 0;
+}
+.composer {
+  border:1px solid #35394a;background:#13151e;
+  border-radius:18px;padding:10px;
+}
+.composer textarea {
+  width:100%;resize:none;max-height:150px;min-height:44px;
+  background:transparent;border:0;outline:0;
+  color:var(--text);padding:7px;
+}
+.bottom {
+  display:flex;align-items:center;justify-content:space-between;padding:0 3px;
+}
+.hint { font-size:10px;color:#858b9d; }
+.send,.save,.primary {
+  border:0;border-radius:11px;background:var(--accent);
+  color:#100c1a;padding:9px 15px;font-weight:800;
+}
+.fine { text-align:center;font-size:10px;color:#72788a;margin-top:7px; }
+.panel { width:min(650px,100%);padding:26px 24px; }
+.panel h1 { font-size:28px;margin:0 0 4px; }
+.panel p { color:var(--muted); }
+.card {
+  border:1px solid var(--line);background:#12141c;
+  border-radius:15px;padding:18px;margin:17px 0;
+}
+.field { margin:16px 0; }
+.field label { display:flex;justify-content:space-between;margin-bottom:8px; }
+.field input:not([type=range]),.field select {
+  width:100%;padding:11px;background:#0c0d13;
+  border:1px solid var(--line);border-radius:10px;color:var(--text);
+}
+input[type=range] { width:100%;accent-color:var(--accent); }
+.note {
+  font-size:12px;padding:12px;border:1px solid #514326;
+  background:#282216;border-radius:11px;color:#e6d2a2;
+}
+.auth-wrap {
+  width:min(430px,100%);margin:auto;padding:24px;
+}
+.auth-wrap h1 { margin:0 0 5px;font-size:30px; }
+.auth-wrap p { color:var(--muted); }
+.auth-wrap input {
+  display:block;width:100%;margin:12px 0;padding:13px;
+  border:1px solid var(--line);background:#0c0d13;
+  border-radius:10px;outline:none;
+}
+.auth-wrap input:focus { border-color:var(--accent); }
+.auth-wrap button { width:100%;margin-top:10px; }
+.auth-toggle {
+  background:transparent;border:0;color:#c9b7ff;padding:10px;
+}
+.notice {
+  min-height:20px;margin:10px 0;color:#c9b7ff;
+  overflow-wrap:anywhere;font-size:13px;
+}
+@media(max-width:700px) {
+  .app { grid-template-columns:1fr; }
+  .side {
+    position:fixed;z-index:4;inset:0 auto 0 0;width:260px;
+    transform:translateX(-110%);transition:transform .2s;
+    box-shadow:15px 0 45px #0008;
+  }
+  .side.open { transform:translateX(0); }
+  .mobile {
+    display:inline-block;border:1px solid var(--line);
+    background:#141620;border-radius:9px;padding:7px 10px;margin-right:9px;
+  }
+  .top { padding:0 12px;height:58px; }
+  .chat { padding:16px 12px; }
+  .composer-wrap { padding:0 11px max(12px,env(safe-area-inset-bottom)); }
+  .suggestions { grid-template-columns:1fr; }
+  .panel { padding:20px 14px; }
+  .auth-wrap { padding:20px 14px; }
+}
+</style>
+</head>
 
-@media(max-width:700px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:4;inset:0 auto 0 0;width:260px;transform:translateX(-110%);transition:transform .2s;box-shadow:15px 0 45px #0008}.side.open{transform:translateX(0)}.mobile{display:inline-block;border:1px solid var(--line);background:#141620;border-radius:9px;padding:7px 10px;margin-right:9px}.top{padding:0 12px;height:58px}.chat{padding:16px 12px}.composer-wrap{padding:0 11px max(12px,env(safe-area-inset-bottom))}.suggestions{grid-template-columns:1fr}.panel{padding:20px 14px}}
-</style></head><body>
+<body>
+<div class="app">
 
-<div class="auth-overlay" id="authOverlay">
-  <div class="auth-card">
-    <div class="brand" style="padding:0 0 12px"><div class="logo">F</div><div><strong>FORGE</strong><small>SECURE SIGN IN</small></div></div>
-    <h2>Welcome to Forge</h2>
-    <p>Sign in to use your connected AI workspace.</p>
-    <input id="authEmail" type="email" autocomplete="email" placeholder="Email address">
-    <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)">
-    <div class="auth-actions"><button class="primary" id="signInBtn">Sign in</button><button id="signUpBtn">Create account</button></div>
-    <div class="auth-error" id="authError" role="status"></div>
-    <div class="auth-note">Your AI provider key stays on the server. Use an email address you can access. If email confirmation is enabled in Supabase, confirm your email before signing in.</div>
+<aside class="side" id="side">
+  <div class="brand">
+    <div class="logo">F</div>
+    <div><strong>FORGE</strong><small>AI WORKSPACE</small></div>
   </div>
+
+  <button class="new" id="newChat">＋ &nbsp; New chat</button>
+  <div class="muted" style="padding:0 9px;letter-spacing:1px">WORKSPACE</div>
+  <button class="nav active" data-page="chat">◈ &nbsp; AI Chat</button>
+  <button class="nav" data-page="settings">⚙ &nbsp; Personality settings</button>
+  <button class="nav" id="accountNav">♙ &nbsp; Account</button>
+
+  <div class="profile">
+    <div class="avatar">F</div>
+    <div>
+      <b id="profileName">Forge Workspace</b>
+      <div class="muted" id="profileStatus">Not signed in</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="top">
+    <div>
+      <button class="mobile" id="menu">☰</button>
+      <b id="title">AI Chat</b>
+    </div>
+    <span class="online" id="status">Connecting</span>
+  </header>
+
+  <section class="content">
+    <div class="chat" id="chat"></div>
+
+    <div class="composer-wrap" id="composerWrap">
+      <div class="composer">
+        <textarea id="prompt" rows="1" placeholder="Message Forge…"></textarea>
+        <div class="bottom">
+          <span class="hint">Enter to send · Shift+Enter for new line</span>
+          <button class="send" id="send">Send ↗</button>
+        </div>
+      </div>
+      <div class="fine">Forge AI · Your assistant workspace</div>
+    </div>
+  </section>
+</main>
 </div>
-<div class="app"><aside class="side" id="side"><div class="brand"><div class="logo">F</div><div><strong>FORGE</strong><small>AI WORKSPACE</small></div></div>
-<button class="new" id="newChat">＋ &nbsp; New chat</button><div class="muted" style="padding:0 9px;letter-spacing:1px">WORKSPACE</div>
-<button class="nav active" data-page="chat">◈ &nbsp; AI Chat</button><button class="nav" data-page="settings">⚙ &nbsp; Personality settings</button>
-<div class="profile"><div class="avatar">F</div><div><b>Forge Workspace</b><div class="muted">Personal assistant</div></div></div></aside>
-<main class="main"><header class="top"><div><button class="mobile" id="menu">☰</button><b id="title">AI Chat</b></div><span class="online" id="status">Preview mode</span></header>
-<section class="content"><div class="chat" id="chat"></div><div class="composer-wrap" id="composerWrap"><div class="composer"><textarea id="prompt" rows="1" placeholder="Message Forge…"></textarea><div class="bottom"><span class="hint">Enter to send · Shift+Enter for new line</span><button class="send" id="send">Send ↗</button></div></div><div class="fine">Forge UI starter · Live AI requires a configured backend</div></div></section></main></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/*
-  SET THESE THREE VALUES before using Forge:
-  1) API_BASE_URL: your deployed backend base URL, without a trailing slash.
-  2) SUPABASE_URL: your Supabase project's Project URL.
-  3) SUPABASE_ANON_KEY: your Supabase project's publishable/anon key.
-  The Supabase anon/publishable key is intended for frontend use. NEVER put AI_API_KEY here.
-*/
-const API_BASE_URL = 'https://YOUR-BACKEND-SERVICE.onrender.com';
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY';
+/* =========================================================
+   FORGE CONNECTION SETTINGS
+   These are the corrected service addresses and public key.
+   Never place your private OpenAI API key in this file.
+   ========================================================= */
 
-const chat=document.querySelector('#chat'),box=document.querySelector('#prompt');
-let messages=[],page='chat',session=null,isSending=false;
-const authClient = (window.supabase && SUPABASE_URL.startsWith('https://') &&
-  !SUPABASE_URL.includes('YOUR_PROJECT') && SUPABASE_ANON_KEY &&
-  !SUPABASE_ANON_KEY.startsWith('YOUR_'))
-  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
-  : null;
+const API_BASE_URL = 'https://forge-a.onrender.com';
+const SUPABASE_URL = 'https://fspxuvdmjuhbmlplweww.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_P9U49Fe6FWnPOHkbkHtmfA_bqQBDeJ7';
 
-const welcome=()=>`<div class="welcome"><div class="mark">✦</div><h1>What are we building today?</h1><p>Your workspace for ideas, problem-solving, writing, and code.</p><div class="suggestions"><button class="suggestion" data-prompt="Help me plan an Android app"><b>▣ Build an app</b><span>Plan an app from scratch</span></button><button class="suggestion" data-prompt="Help me debug this code: "><b>⌘ Code with me</b><span>Work through a coding problem</span></button><button class="suggestion" data-prompt="Brainstorm creative ideas for "><b>✧ Brainstorm ideas</b><span>Explore possibilities</span></button><button class="suggestion" data-prompt="Explain this topic simply: "><b>⌁ Learn something</b><span>Make a hard topic clearer</span></button></div></div>`;
-function bind(){document.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>{box.value=b.dataset.prompt;box.focus()})}
-function render(){
-  chat.innerHTML=messages.length?messages.map(m=>`<div class="msg ${m.role==='user'?'user':''}"><div class="mini">${m.role==='user'?'Y':'F'}</div><div class="bubble"></div></div>`).join(''):welcome();
-  if(messages.length){chat.querySelectorAll('.bubble').forEach((e,i)=>e.textContent=messages[i].content);chat.scrollTop=chat.scrollHeight}else bind()
+const chat = document.querySelector('#chat');
+const box = document.querySelector('#prompt');
+const statusEl = document.querySelector('#status');
+
+let messages = [];
+let page = 'chat';
+let currentUser = null;
+let authMode = 'signin';
+let busy = false;
+
+const authClient =
+  window.supabase &&
+  SUPABASE_URL.startsWith('https://') &&
+  !SUPABASE_ANON_KEY.startsWith('YOUR_')
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+function setStatus(text, error = false) {
+  statusEl.textContent = text;
+  statusEl.classList.toggle('error', error);
 }
-function pageTo(p){page=p;document.querySelector('#title').textContent=p==='chat'?'AI Chat':'Personality settings';document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===p));document.querySelector('#composerWrap').style.display=p==='chat'?'block':'none';document.querySelector('#side').classList.remove('open');if(p==='chat')render();else settings()}
-document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>pageTo(b.dataset.page));
-document.querySelector('#menu').onclick=()=>document.querySelector('#side').classList.toggle('open');
-document.querySelector('#newChat').onclick=()=>{messages=[];pageTo('chat')};
-document.querySelector('#send').onclick=send;
-box.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-function getPrefs(){try{return JSON.parse(localStorage.getItem('forge-prefs')||'{}')}catch(e){return {}}}
-function apiPersonality(){
-  const p=getPrefs();
-  return {
-    personality:p.style||'Balanced and helpful',
-    humor:Number(p.humor??30)>=70?'high':Number(p.humor??30)>=35?'moderate':'low',
-    detail:Number(p.creativity??70)>=70?'detailed':'balanced',
-    instructionFollowing:Number(p.obedience??80)
+
+function welcome() {
+  return `
+    <div class="welcome">
+      <div class="mark">✦</div>
+      <h1>What are we building today?</h1>
+      <p>Your workspace for ideas, problem-solving, writing, and code.</p>
+      <div class="suggestions">
+        <button class="suggestion" data-prompt="Help me plan an Android app">
+          <b>▣ Build an app</b><span>Plan an app from scratch</span>
+        </button>
+        <button class="suggestion" data-prompt="Help me debug this code: ">
+          <b>⌘ Code with me</b><span>Work through a coding problem</span>
+        </button>
+        <button class="suggestion" data-prompt="Brainstorm creative ideas for ">
+          <b>✧ Brainstorm ideas</b><span>Explore possibilities</span>
+        </button>
+        <button class="suggestion" data-prompt="Explain this topic simply: ">
+          <b>⌁ Learn something</b><span>Make a hard topic clearer</span>
+        </button>
+      </div>
+    </div>`;
+}
+
+function bindSuggestions() {
+  document.querySelectorAll('[data-prompt]').forEach(button => {
+    button.onclick = () => {
+      box.value = button.dataset.prompt;
+      box.focus();
+    };
+  });
+}
+
+function render() {
+  chat.innerHTML = messages.length
+    ? messages.map(message => `
+        <div class="msg ${message.role === 'user' ? 'user' : ''}">
+          <div class="mini">${message.role === 'user' ? 'Y' : 'F'}</div>
+          <div class="bubble"></div>
+        </div>`).join('')
+    : welcome();
+
+  if (messages.length) {
+    chat.querySelectorAll('.bubble').forEach((element, index) => {
+      element.textContent = messages[index].content;
+    });
+    chat.scrollTop = chat.scrollHeight;
+  } else {
+    bindSuggestions();
+  }
+}
+
+function pageTo(nextPage) {
+  page = nextPage;
+
+  document.querySelector('#title').textContent =
+    nextPage === 'chat' ? 'AI Chat' :
+    nextPage === 'settings' ? 'Personality settings' : 'Account';
+
+  document.querySelectorAll('.nav[data-page]').forEach(button => {
+    button.classList.toggle('active', button.dataset.page === nextPage);
+  });
+
+  document.querySelector('#composerWrap').style.display =
+    nextPage === 'chat' ? 'block' : 'none';
+
+  document.querySelector('#side').classList.remove('open');
+
+  if (nextPage === 'chat') render();
+  else if (nextPage === 'settings') settings();
+  else accountPage();
+}
+
+document.querySelectorAll('.nav[data-page]').forEach(button => {
+  button.onclick = () => pageTo(button.dataset.page);
+});
+
+document.querySelector('#menu').onclick = () => {
+  document.querySelector('#side').classList.toggle('open');
+};
+
+document.querySelector('#newChat').onclick = () => {
+  messages = [];
+  pageTo('chat');
+};
+
+document.querySelector('#accountNav').onclick = () => pageTo('account');
+
+box.addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
+});
+
+document.querySelector('#send').onclick = send;
+
+async function send() {
+  const text = box.value.trim();
+  if (!text || busy) return;
+
+  if (!authClient) {
+    setStatus('Configuration error', true);
+    messages.push({
+      role: 'assistant',
+      content: 'Forge could not initialize Supabase. Check the Supabase URL and publishable key in the connection settings.'
+    });
+    render();
+    return;
+  }
+
+  if (!currentUser) {
+    messages.push({
+      role: 'assistant',
+      content: 'Please sign in to your Forge account before chatting.'
+    });
+    render();
+    pageTo('account');
+    return;
+  }
+
+  const { data: sessionData, error: sessionError } =
+    await authClient.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    messages.push({
+      role: 'assistant',
+      content: 'Your session has expired. Please sign in again.'
+    });
+    render();
+    pageTo('account');
+    return;
+  }
+
+  messages.push({ role: 'user', content: text });
+  box.value = '';
+  render();
+
+  busy = true;
+  document.querySelector('#send').disabled = true;
+  setStatus('Forge is thinking…');
+
+  try {
+    const preferences = getPreferences();
+    const response = await fetch(`${API_BASE_URL}/v1/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionData.session.access_token}`
+      },
+      body: JSON.stringify({
+        messages: messages.map(message => ({
+          role: message.role,
+          content: message.content
+        })),
+        personality: preferences
+      })
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || result.message ||
+        `The server returned HTTP ${response.status}.`
+      );
+    }
+
+    const reply = result.reply || result.message || result.output;
+
+    if (typeof reply !== 'string' || !reply.trim()) {
+      throw new Error('The backend did not return a reply. Check its chat endpoint.');
+    }
+
+    messages.push({ role: 'assistant', content: reply });
+    setStatus('Connected');
+  } catch (error) {
+    messages.push({
+      role: 'assistant',
+      content: `I couldn't reach the AI service: ${error.message}\n\nCheck that the Render backend is running and its environment variables are configured correctly.`
+    });
+    setStatus('Connection problem', true);
+  } finally {
+    busy = false;
+    document.querySelector('#send').disabled = false;
+    render();
+  }
+}
+
+function getPreferences() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
+    return {
+      style: saved.style || 'Balanced and helpful',
+      humor: Number(saved.humor ?? 30),
+      obedience: Number(saved.obedience ?? 80),
+      creativity: Number(saved.creativity ?? 70)
+    };
+  } catch {
+    return {
+      style: 'Balanced and helpful',
+      humor: 30,
+      obedience: 80,
+      creativity: 70
+    };
+  }
+}
+
+function settings() {
+  const prefs = getPreferences();
+
+  chat.innerHTML = `
+    <div class="panel">
+      <h1>Personality</h1>
+      <p>Shape how Forge communicates with you.</p>
+
+      <div class="card">
+        <b>Response style</b>
+
+        <div class="field">
+          <label for="style">Personality</label>
+          <select id="style">
+            <option>Balanced and helpful</option>
+            <option>Professional and precise</option>
+            <option>Creative and imaginative</option>
+            <option>Casual and friendly</option>
+            <option>Concise and direct</option>
+          </select>
+        </div>
+
+        ${[
+          ['humor', 'Humor'],
+          ['obedience', 'Instruction following'],
+          ['creativity', 'Creativity']
+        ].map(([id, label]) => `
+          <div class="field">
+            <label for="${id}">
+              ${label}
+              <span id="${id}v">${prefs[id]}%</span>
+            </label>
+            <input id="${id}" type="range" min="0" max="100"
+              value="${prefs[id]}">
+          </div>`).join('')}
+
+        <button class="save" id="save">Save preferences</button>
+        <span id="saved" class="muted"></span>
+      </div>
+
+      <div class="note">
+        Preferences are saved in this browser and sent with chat requests.
+        The backend must use them to affect the AI's responses.
+      </div>
+    </div>`;
+
+  document.querySelector('#style').value = prefs.style;
+
+  ['humor', 'obedience', 'creativity'].forEach(id => {
+    document.querySelector('#' + id).oninput = event => {
+      document.querySelector('#' + id + 'v').textContent =
+        event.target.value + '%';
+    };
+  });
+
+  document.querySelector('#save').onclick = () => {
+    const preferences = {
+      style: document.querySelector('#style').value
+    };
+
+    ['humor', 'obedience', 'creativity'].forEach(id => {
+      preferences[id] = Number(document.querySelector('#' + id).value);
+    });
+
+    try {
+      localStorage.setItem('forge-prefs', JSON.stringify(preferences));
+      document.querySelector('#saved').textContent = 'Saved ✓';
+    } catch {
+      document.querySelector('#saved').textContent = 'Could not save.';
+    }
   };
 }
-async function send(){
-  const t=box.value.trim(); if(!t||isSending)return;
-  if(!session){showAuth('Please sign in first.');return}
-  if(!authClient){showAuth('Setup needed: add your Supabase project URL and publishable/anon key in frontend/index.html.');return}
-  if(!API_BASE_URL.startsWith('https://')||API_BASE_URL.includes('YOUR-BACKEND')){
-    messages.push({role:'assistant',content:'Forge setup is almost ready. Add your deployed backend URL to API_BASE_URL in frontend/index.html, then reload this page.'});render();return;
+
+function accountPage(message = '') {
+  if (currentUser) {
+    chat.innerHTML = `
+      <div class="auth-wrap">
+        <h1>Your account</h1>
+        <p>You are signed in to Forge.</p>
+        <div class="card">
+          <b>Email</b>
+          <p>${escapeHTML(currentUser.email || 'Account')}</p>
+          <button class="primary" id="signOut">Sign out</button>
+          <div class="notice" id="authNotice"></div>
+        </div>
+      </div>`;
+
+    document.querySelector('#signOut').onclick = async () => {
+      const { error } = await authClient.auth.signOut();
+      if (error) {
+        document.querySelector('#authNotice').textContent = error.message;
+      } else {
+        currentUser = null;
+        updateProfile();
+        accountPage('You have signed out.');
+      }
+    };
+    return;
   }
-  messages.push({role:'user',content:t});box.value='';isSending=true;
-  const sendBtn=document.querySelector('#send');sendBtn.disabled=true;sendBtn.textContent='Thinking…';
-  render();document.querySelector('#status').textContent='Connecting…';
-  try{
-    const {data:{session:currentSession},error:sessionError}=await authClient.auth.getSession();
-    if(sessionError||!currentSession?.access_token)throw new Error('Your sign-in session expired. Please sign in again.');
-    session=currentSession;
-    const response=await fetch(`${API_BASE_URL.replace(/\/$/,'')}/v1/chat`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},
-      body:JSON.stringify({messages:messages.slice(-30),personality:apiPersonality()})
-    });
-    const payload=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(payload.error||`Server error (${response.status}). Check backend setup.`);
-    if(typeof payload.reply!=='string')throw new Error('The server returned an unexpected response.');
-    messages.push({role:'assistant',content:payload.reply});
-    document.querySelector('#status').textContent='Connected';
-  }catch(e){
-    messages.push({role:'assistant',content:`I couldn’t get a reply from the AI service. ${e.message||'Please try again.'}`});
-    document.querySelector('#status').textContent='Connection issue';
-  }finally{isSending=false;sendBtn.disabled=false;sendBtn.textContent='Send ↗';render()}
-}
-function showAuth(message=''){
-  document.querySelector('#authOverlay').style.display='grid';
-  document.querySelector('#authError').textContent=message;
-}
-function hideAuth(){document.querySelector('#authOverlay').style.display='none';document.querySelector('#authError').textContent=''}
-async function doAuth(mode){
-  const email=document.querySelector('#authEmail').value.trim(),password=document.querySelector('#authPassword').value;
-  const errorEl=document.querySelector('#authError');errorEl.textContent='';
-  if(!authClient){errorEl.textContent='Setup needed: fill in SUPABASE_URL and SUPABASE_ANON_KEY near the top of this script.';return}
-  if(!email||!password){errorEl.textContent='Enter your email and password.';return}
-  if(password.length<6){errorEl.textContent='Use a password with at least 6 characters.';return}
-  document.querySelector('#signInBtn').disabled=true;document.querySelector('#signUpBtn').disabled=true;
-  try{
-    let result;
-    if(mode==='signup')result=await authClient.auth.signUp({email,password});
-    else result=await authClient.auth.signInWithPassword({email,password});
-    if(result.error)throw result.error;
-    if(mode==='signup'&&!result.data.session){
-      errorEl.textContent='Account created. Check your email for a confirmation link, then return here and sign in.';
+
+  chat.innerHTML = `
+    <div class="auth-wrap">
+      <h1>${authMode === 'signin' ? 'Welcome back' : 'Create your Forge account'}</h1>
+      <p>${authMode === 'signin'
+        ? 'Sign in to start chatting with Forge.'
+        : 'Create an account to access your AI workspace.'}</p>
+
+      <form id="authForm">
+        <input id="email" type="email" autocomplete="email"
+          placeholder="Email address" required>
+        <input id="password" type="password"
+          autocomplete="${authMode === 'signin' ? 'current-password' : 'new-password'}"
+          placeholder="Password (at least 6 characters)"
+          minlength="6" required>
+        <button class="primary" id="authSubmit" type="submit">
+          ${authMode === 'signin' ? 'Sign in' : 'Create account'}
+        </button>
+      </form>
+
+      <button class="auth-toggle" id="toggleAuth">
+        ${authMode === 'signin'
+          ? 'Need an account? Sign up'
+          : 'Already have an account? Sign in'}
+      </button>
+
+      <div class="notice" id="authNotice">${escapeHTML(message)}</div>
+    </div>`;
+
+  document.querySelector('#toggleAuth').onclick = () => {
+    authMode = authMode === 'signin' ? 'signup' : 'signin';
+    accountPage();
+  };
+
+  document.querySelector('#authForm').onsubmit = async event => {
+    event.preventDefault();
+
+    const notice = document.querySelector('#authNotice');
+    const submit = document.querySelector('#authSubmit');
+
+    if (!authClient) {
+      notice.textContent = 'Supabase configuration is missing or invalid.';
       return;
     }
-    session=result.data.session;
-    if(!session){errorEl.textContent='Account action completed. If confirmation is enabled, confirm your email and sign in.';return}
-    hideAuth();document.querySelector('#status').textContent='Connected';render();
-  }catch(e){errorEl.textContent=e.message||'Sign-in failed.'}
-  finally{document.querySelector('#signInBtn').disabled=false;document.querySelector('#signUpBtn').disabled=false}
-}
-document.querySelector('#signInBtn').onclick=()=>doAuth('signin');
-document.querySelector('#signUpBtn').onclick=()=>doAuth('signup');
 
-function settings(){
- chat.innerHTML=`<div class="panel"><h1>Personality</h1><p>Shape how Forge communicates with you.</p><div class="card"><b>Response style</b><div class="field"><label for="style">Personality</label><select id="style"><option>Balanced and helpful</option><option>Professional and precise</option><option>Creative and imaginative</option><option>Casual and friendly</option><option>Concise and direct</option></select></div>${[['humor','Humor',30],['obedience','Instruction following',80],['creativity','Response detail',70]].map(([id,n,v])=>`<div class="field"><label for="${id}">${n}<span id="${id}v">${v}%</span></label><input id="${id}" type="range" min="0" max="100" value="${v}"></div>`).join('')}<button class="save" id="save">Save preferences</button> <span id="saved" class="muted"></span></div><div class="note">Preferences are saved in this browser and sent with your chat requests.</div></div>`;
- try{let p=getPrefs();if(p.style)document.querySelector('#style').value=p.style;['humor','obedience','creativity'].forEach(id=>{if(p[id]!=null)document.querySelector('#'+id).value=p[id];document.querySelector('#'+id+'v').textContent=document.querySelector('#'+id).value+'%'})}catch(e){}
- ['humor','obedience','creativity'].forEach(id=>document.querySelector('#'+id).oninput=e=>document.querySelector('#'+id+'v').textContent=e.target.value+'%');
- document.querySelector('#save').onclick=()=>{let p={style:document.querySelector('#style').value};['humor','obedience','creativity'].forEach(id=>p[id]=document.querySelector('#'+id).value);try{localStorage.setItem('forge-prefs',JSON.stringify(p));document.querySelector('#saved').textContent='Saved on this device ✓'}catch(e){document.querySelector('#saved').textContent='Could not save'}}
-}
-document.querySelector('#authOverlay').style.display='grid';
-if(authClient){
-  authClient.auth.getSession().then(({data})=>{if(data.session){session=data.session;hideAuth();document.querySelector('#status').textContent='Signed in'}});
-  authClient.auth.onAuthStateChange((_event,newSession)=>{session=newSession;if(newSession){hideAuth()}else{showAuth('You have been signed out.')}});
-}
-render();
-</script></body></html>
+    const email = document.querySelector('#email').value.trim();
+    const password = document.querySelector('#password').value;
+
+    submit.disabled = true;
+    notice.textContent = 'Please wait…';
+
+    try {
+      if (authMode === 'signup') {
+        const { data, error } = await authClient.auth.signUp({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+         
