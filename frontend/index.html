@@ -161,6 +161,7 @@ button:disabled { opacity: .5; cursor: wait; }
 
 .online.error { color: #ff9c9c; }
 .online.error:before { background: #ff7777; }
+
 .mobile { display: none; }
 
 .content {
@@ -434,7 +435,11 @@ input[type=range] {
     margin-right: 9px;
   }
 
-  .top { padding: 0 12px; height: 58px; }
+  .top {
+    padding: 0 12px;
+    height: 58px;
+  }
+
   .chat { padding: 16px 12px; }
 
   .composer-wrap {
@@ -450,14 +455,17 @@ input[type=range] {
 
 <body>
 <div class="app">
-
   <aside class="side" id="side">
     <div class="brand">
       <div class="logo">F</div>
-      <div><strong>FORGE</strong><small>AI WORKSPACE</small></div>
+      <div>
+        <strong>FORGE</strong>
+        <small>AI WORKSPACE</small>
+      </div>
     </div>
 
     <button class="new" id="newChat">＋ &nbsp; New chat</button>
+
     <div class="muted" style="padding:0 9px;letter-spacing:1px">WORKSPACE</div>
 
     <button class="nav active" data-page="chat">◈ &nbsp; AI Chat</button>
@@ -497,17 +505,12 @@ input[type=range] {
       </div>
     </section>
   </main>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 'use strict';
-
-/* ==========================================
-   FORGE CONFIGURATION
-   ========================================== */
 
 const API_BASE_URL = 'https://forge-a.onrender.com';
 const SUPABASE_URL = 'https://fspxuvdmjuhbmlplweww.supabase.co';
@@ -526,11 +529,6 @@ let busy = false;
 const authClient = window.supabase
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
-
-
-/* ==========================================
-   STATUS AND UTILITIES
-   ========================================== */
 
 function setStatus(text, error = false) {
   statusEl.textContent = text;
@@ -581,11 +579,6 @@ function updateProfile() {
     currentUser ? 'Signed in' : 'Not signed in';
 }
 
-
-/* ==========================================
-   CHAT INTERFACE
-   ========================================== */
-
 function welcome() {
   return `
     <div class="welcome">
@@ -628,32 +621,35 @@ function bindSuggestions() {
 }
 
 function render() {
-  if (messages.length === 0) {
-    chat.innerHTML = welcome();
+  chat.innerHTML = messages.length
+    ? messages.map(message => `
+        <div class="msg ${message.role === 'user' ? 'user' : ''}">
+          <div class="mini">${message.role === 'user' ? 'Y' : 'F'}</div>
+          <div class="bubble"></div>
+        </div>
+      `).join('')
+    : welcome();
+
+  if (messages.length) {
+    chat.querySelectorAll('.bubble').forEach((element, index) => {
+      element.textContent = messages[index].content;
+    });
+
+    chat.scrollTop = chat.scrollHeight;
+  } else {
     bindSuggestions();
-    return;
   }
-
-  chat.innerHTML = messages.map(message => `
-    <div class="msg ${message.role === 'user' ? 'user' : ''}">
-      <div class="mini">${message.role === 'user' ? 'Y' : 'F'}</div>
-      <div class="bubble"></div>
-    </div>
-  `).join('');
-
-  chat.querySelectorAll('.bubble').forEach((element, index) => {
-    element.textContent = messages[index].content;
-  });
-
-  chat.scrollTop = chat.scrollHeight;
 }
 
 function pageTo(nextPage) {
   page = nextPage;
 
   document.querySelector('#title').textContent =
-    nextPage === 'chat' ? 'AI Chat' :
-    nextPage === 'settings' ? 'Personality settings' : 'Account';
+    nextPage === 'chat'
+      ? 'AI Chat'
+      : nextPage === 'settings'
+        ? 'Personality settings'
+        : 'Account';
 
   document.querySelectorAll('.nav[data-page]').forEach(button => {
     button.classList.toggle('active', button.dataset.page === nextPage);
@@ -664,9 +660,13 @@ function pageTo(nextPage) {
 
   document.querySelector('#side').classList.remove('open');
 
-  if (nextPage === 'chat') render();
-  else if (nextPage === 'settings') settings();
-  else accountPage();
+  if (nextPage === 'chat') {
+    render();
+  } else if (nextPage === 'settings') {
+    settings();
+  } else {
+    accountPage();
+  }
 }
 
 document.querySelectorAll('.nav[data-page]').forEach(button => {
@@ -693,122 +693,25 @@ box.addEventListener('keydown', event => {
 
 document.querySelector('#send').onclick = send;
 
-
-/* ==========================================
-   PERSONALITY SETTINGS
-   ========================================== */
-
 function getPreferences() {
-  let saved = {};
+  let preferences = {};
 
   try {
-    saved = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
-  } catch (error) {
-    saved = {};
-  }
+    preferences = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
+  } catch {}
 
   return {
-    personality: String(saved.style || 'Balanced and helpful'),
-    humor: `${Number(saved.humor ?? 30)}%`,
-    detail: Number(saved.creativity ?? 70) >= 65 ? 'detailed' : 'balanced',
+    personality: String(preferences.style || 'Balanced and helpful'),
+    humor: `${Number(preferences.humor ?? 30)}%`,
+    detail: Number(preferences.creativity ?? 70) >= 65
+      ? 'detailed'
+      : 'balanced',
     instructionFollowing: Math.max(
       0,
-      Math.min(100, Number(saved.obedience ?? 80))
+      Math.min(100, Number(preferences.obedience ?? 80))
     )
   };
 }
-
-function settings() {
-  let saved = {};
-
-  try {
-    saved = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
-  } catch (error) {
-    saved = {};
-  }
-
-  const preferences = {
-    style: saved.style || 'Balanced and helpful',
-    humor: Number(saved.humor ?? 30),
-    obedience: Number(saved.obedience ?? 80),
-    creativity: Number(saved.creativity ?? 70)
-  };
-
-  chat.innerHTML = `
-    <div class="panel">
-      <h1>Personality</h1>
-      <p>Shape how Forge communicates with you.</p>
-
-      <div class="card">
-        <b>Response style</b>
-
-        <div class="field">
-          <label for="style">Personality</label>
-          <select id="style">
-            <option>Balanced and helpful</option>
-            <option>Professional and precise</option>
-            <option>Creative and imaginative</option>
-            <option>Casual and friendly</option>
-            <option>Concise and direct</option>
-          </select>
-        </div>
-
-        ${[
-          ['humor', 'Humor'],
-          ['obedience', 'Instruction following'],
-          ['creativity', 'Creativity']
-        ].map(([id, label]) => `
-          <div class="field">
-            <label for="${id}">
-              ${label}
-              <span id="${id}v">${preferences[id]}%</span>
-            </label>
-            <input id="${id}" type="range" min="0" max="100"
-              value="${preferences[id]}">
-          </div>
-        `).join('')}
-
-        <button class="save" id="save">Save preferences</button>
-        <span id="saved" class="muted"></span>
-      </div>
-
-      <div class="note">
-        Preferences are saved in this browser and sent with chat requests.
-      </div>
-    </div>
-  `;
-
-  document.querySelector('#style').value = preferences.style;
-
-  ['humor', 'obedience', 'creativity'].forEach(id => {
-    document.querySelector('#' + id).oninput = event => {
-      document.querySelector('#' + id + 'v').textContent =
-        event.target.value + '%';
-    };
-  });
-
-  document.querySelector('#save').onclick = () => {
-    const values = {
-      style: document.querySelector('#style').value
-    };
-
-    ['humor', 'obedience', 'creativity'].forEach(id => {
-      values[id] = Number(document.querySelector('#' + id).value);
-    });
-
-    try {
-      localStorage.setItem('forge-prefs', JSON.stringify(values));
-      document.querySelector('#saved').textContent = 'Saved ✓';
-    } catch (error) {
-      document.querySelector('#saved').textContent = 'Could not save.';
-    }
-  };
-}
-
-
-/* ==========================================
-   SEND A MESSAGE TO THE BACKEND
-   ========================================== */
 
 async function send() {
   const text = box.value.trim();
@@ -817,12 +720,10 @@ async function send() {
 
   if (!authClient) {
     setStatus('Supabase unavailable', true);
-
     messages.push({
       role: 'assistant',
       content: 'Supabase did not load. Refresh the page and check your internet connection.'
     });
-
     render();
     return;
   }
@@ -846,7 +747,6 @@ async function send() {
       role: 'assistant',
       content: `Could not verify your session: ${error.message}`
     });
-
     render();
     return;
   }
@@ -898,15 +798,15 @@ async function send() {
 
     messages.push({ role: 'assistant', content: reply });
     setStatus('Backend online');
-
   } catch (error) {
     messages.push({
       role: 'assistant',
-      content: `I couldn't complete that request: ${error.message}\n\nCheck the Render backend, AI provider settings, and Supabase authentication.`
+      content:
+        `I couldn't complete that request: ${error.message}\n\n` +
+        'Check the Render backend, AI provider settings, and Supabase authentication.'
     });
 
     setStatus('Chat request failed', true);
-
   } finally {
     busy = false;
     document.querySelector('#send').disabled = false;
@@ -914,10 +814,96 @@ async function send() {
   }
 }
 
+function settings() {
+  let stored = {};
 
-/* ==========================================
-   SIGN-IN AND SIGN-UP
-   ========================================== */
+  try {
+    stored = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
+  } catch {}
+
+  const preferences = {
+    style: stored.style || 'Balanced and helpful',
+    humor: Number(stored.humor ?? 30),
+    obedience: Number(stored.obedience ?? 80),
+    creativity: Number(stored.creativity ?? 70)
+  };
+
+  chat.innerHTML = `
+    <div class="panel">
+      <h1>Personality</h1>
+      <p>Shape how Forge communicates with you.</p>
+
+      <div class="card">
+        <b>Response style</b>
+
+        <div class="field">
+          <label for="style">Personality</label>
+
+          <select id="style">
+            <option>Balanced and helpful</option>
+            <option>Professional and precise</option>
+            <option>Creative and imaginative</option>
+            <option>Casual and friendly</option>
+            <option>Concise and direct</option>
+          </select>
+        </div>
+
+        ${[
+          ['humor', 'Humor'],
+          ['obedience', 'Instruction following'],
+          ['creativity', 'Creativity']
+        ].map(([id, label]) => `
+          <div class="field">
+            <label for="${id}">
+              ${label}
+              <span id="${id}v">${preferences[id]}%</span>
+            </label>
+            <input
+              id="${id}"
+              type="range"
+              min="0"
+              max="100"
+              value="${preferences[id]}"
+            >
+          </div>
+        `).join('')}
+
+        <button class="save" id="save">Save preferences</button>
+        <span id="saved" class="muted"></span>
+      </div>
+
+      <div class="note">
+        Preferences are saved in this browser and sent with chat requests.
+      </div>
+    </div>
+  `;
+
+  document.querySelector('#style').value = preferences.style;
+
+  ['humor', 'obedience', 'creativity'].forEach(id => {
+    document.querySelector('#' + id).oninput = event => {
+      document.querySelector('#' + id + 'v').textContent =
+        event.target.value + '%';
+    };
+  });
+
+  document.querySelector('#save').onclick = () => {
+    const values = {
+      style: document.querySelector('#style').value
+    };
+
+    ['humor', 'obedience', 'creativity'].forEach(id => {
+      values[id] = Number(document.querySelector('#' + id).value);
+    });
+
+    try {
+      localStorage.setItem('forge-prefs', JSON.stringify(values));
+      document.querySelector('#saved').textContent = 'Saved ✓';
+    } catch {
+      document.querySelector('#saved').textContent = 'Could not save.';
+    }
+  };
+}
 
 function accountPage(message = '') {
   if (!authClient) {
@@ -927,3 +913,23 @@ function accountPage(message = '') {
         <p>Supabase client did not load. Refresh and try again.</p>
       </div>
     `;
+    return;
+  }
+
+  if (currentUser) {
+    chat.innerHTML = `
+      <div class="auth-wrap">
+        <h1>Your account</h1>
+        <p>You are signed in to Forge.</p>
+
+        <div class="card">
+          <b>Email</b>
+          <p>${escapeHTML(currentUser.email || 'Account')}</p>
+          <button class="primary" id="signOut">Sign out</button>
+          <div class="notice" id="authNotice"></div>
+        </div>
+      </div>
+    `;
+
+    document.querySelector('#signOut').onclick = async () => {
+      const { error } = await authClient
