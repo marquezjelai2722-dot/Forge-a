@@ -1,513 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090a0f">
 <title>Forge AI</title>
-
 <style>
-:root {
-  color-scheme: dark;
-  --bg: #090a0f;
-  --line: #292d3b;
-  --text: #f4f4f7;
-  --muted: #9da3b5;
-  --accent: #9b75ff;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at 70% -10%, #28203e, transparent 45%), var(--bg);
-  color: var(--text);
-  font: 15px/1.5 system-ui, sans-serif;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-button, textarea, input, select { font: inherit; }
-button { cursor: pointer; color: inherit; }
-button:disabled { opacity: .5; cursor: wait; }
-
-.app {
-  height: 100dvh;
-  display: grid;
-  grid-template-columns: 240px 1fr;
-}
-
-.side {
-  padding: 18px 13px;
-  background: #0c0d13;
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 13px;
-  background: linear-gradient(145deg, #c1aaff, #7048d6);
-  display: grid;
-  place-items: center;
-  font-size: 25px;
-  font-weight: 900;
-}
-
-.brand strong {
-  letter-spacing: 2.5px;
-  font-size: 19px;
-}
-
-.brand small {
-  display: block;
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: 2px;
-}
-
-.new, .nav {
-  border: 1px solid var(--line);
-  background: #141620;
-  border-radius: 12px;
-  padding: 11px;
-  text-align: left;
-}
-
-.new {
-  background: #211a32;
-  border-color: #4b3b70;
-}
-
-.nav {
-  background: transparent;
-  border-color: transparent;
-  color: #c8cad6;
-}
-
-.nav.active, .nav:hover {
-  background: #191b26;
-  border-color: var(--line);
-}
-
-.profile {
-  margin-top: auto;
-  border-top: 1px solid var(--line);
-  padding: 14px 6px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.avatar, .mini {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: #29223d;
-  color: #d2c3ff;
-  font-weight: 800;
-  flex: none;
-}
-
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-}
-
-.top {
-  height: 62px;
-  flex: none;
-  border-bottom: 1px solid #242633;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 22px;
-  background: #0b0c12bb;
-}
-
-.online {
-  font-size: 11px;
-  color: #a9e4c0;
-}
-
-.online:before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: #62d995;
-  border-radius: 50%;
-  margin-right: 7px;
-}
-
-.online.error { color: #ff9c9c; }
-.online.error:before { background: #ff7777; }
-
-.mobile { display: none; }
-
-.content {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.chat {
-  width: min(820px, 100%);
-  padding: 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.welcome {
-  margin: auto 0;
-  text-align: center;
-  padding: 24px 0;
-}
-
-.mark {
-  margin: 0 auto 18px;
-  width: 65px;
-  height: 65px;
-  border: 1px solid #59458a;
-  border-radius: 22px;
-  background: #1d182b;
-  display: grid;
-  place-items: center;
-  color: #c9b7ff;
-  font-size: 34px;
-}
-
-.welcome h1 {
-  font-size: clamp(27px, 4vw, 38px);
-  letter-spacing: -1px;
-  margin: 0 0 8px;
-}
-
-.welcome p {
-  color: var(--muted);
-  margin: 0 auto 24px;
-}
-
-.suggestions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  max-width: 550px;
-  margin: auto;
-}
-
-.suggestion {
-  border: 1px solid var(--line);
-  background: #12141c;
-  border-radius: 14px;
-  padding: 13px;
-  text-align: left;
-}
-
-.suggestion:hover { border-color: #7657b6; }
-
-.suggestion span {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 3px;
-}
-
-.msg {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.msg.user { flex-direction: row-reverse; }
-
-.bubble {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  max-width: 88%;
-  padding: 12px 15px;
-  background: #141620;
-  border: 1px solid #282b39;
-  border-radius: 4px 15px 15px 15px;
-  line-height: 1.65;
-}
-
-.user .bubble {
-  background: #211b32;
-  border-color: #46365f;
-  border-radius: 15px 4px 15px 15px;
-}
-
-.composer-wrap {
-  width: min(820px, 100%);
-  padding: 0 24px max(16px, env(safe-area-inset-bottom));
-  margin: auto auto 0;
-}
-
-.composer {
-  border: 1px solid #35394a;
-  background: #13151e;
-  border-radius: 18px;
-  padding: 10px;
-}
-
-.composer textarea {
-  width: 100%;
-  resize: none;
-  max-height: 150px;
-  min-height: 44px;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  color: var(--text);
-  padding: 7px;
-}
-
-.bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 3px;
-}
-
-.hint {
-  font-size: 10px;
-  color: #858b9d;
-}
-
-.send, .save, .primary {
-  border: 0;
-  border-radius: 11px;
-  background: var(--accent);
-  color: #100c1a;
-  padding: 9px 15px;
-  font-weight: 800;
-}
-
-.fine {
-  text-align: center;
-  font-size: 10px;
-  color: #72788a;
-  margin-top: 7px;
-}
-
-.panel {
-  width: min(650px, 100%);
-  padding: 26px 24px;
-}
-
-.panel h1 {
-  font-size: 28px;
-  margin: 0 0 4px;
-}
-
-.panel p, .auth-wrap p { color: var(--muted); }
-
-.card {
-  border: 1px solid var(--line);
-  background: #12141c;
-  border-radius: 15px;
-  padding: 18px;
-  margin: 17px 0;
-}
-
-.field { margin: 16px 0; }
-
-.field label {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.field input:not([type=range]), .field select {
-  width: 100%;
-  padding: 11px;
-  background: #0c0d13;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--text);
-}
-
-input[type=range] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.note {
-  font-size: 12px;
-  padding: 12px;
-  border: 1px solid #514326;
-  background: #282216;
-  border-radius: 11px;
-  color: #e6d2a2;
-}
-
-.auth-wrap {
-  width: min(430px, 100%);
-  margin: auto;
-  padding: 24px;
-}
-
-.auth-wrap h1 {
-  margin: 0 0 5px;
-  font-size: 30px;
-}
-
-.auth-wrap input {
-  display: block;
-  width: 100%;
-  margin: 12px 0;
-  padding: 13px;
-  border: 1px solid var(--line);
-  background: #0c0d13;
-  border-radius: 10px;
-  outline: none;
-  color: var(--text);
-}
-
-.auth-wrap input:focus { border-color: var(--accent); }
-
-.auth-wrap button {
-  width: 100%;
-  margin-top: 10px;
-}
-
-.auth-toggle {
-  background: transparent;
-  border: 0;
-  color: #c9b7ff;
-  padding: 10px;
-}
-
-.notice {
-  min-height: 20px;
-  margin: 10px 0;
-  color: #c9b7ff;
-  overflow-wrap: anywhere;
-  font-size: 13px;
-}
-
-@media (max-width: 700px) {
-  .app { grid-template-columns: 1fr; }
-
-  .side {
-    position: fixed;
-    z-index: 4;
-    inset: 0 auto 0 0;
-    width: 260px;
-    transform: translateX(-110%);
-    transition: transform .2s;
-    box-shadow: 15px 0 45px #0008;
-  }
-
-  .side.open { transform: translateX(0); }
-
-  .mobile {
-    display: inline-block;
-    border: 1px solid var(--line);
-    background: #141620;
-    border-radius: 9px;
-    padding: 7px 10px;
-    margin-right: 9px;
-  }
-
-  .top {
-    padding: 0 12px;
-    height: 58px;
-  }
-
-  .chat { padding: 16px 12px; }
-
-  .composer-wrap {
-    padding: 0 11px max(12px, env(safe-area-inset-bottom));
-  }
-
-  .suggestions { grid-template-columns: 1fr; }
-  .panel { padding: 20px 14px; }
-  .auth-wrap { padding: 20px 14px; }
+:root{color-scheme:dark;--bg:#090a0f;--panel:#12141c;--line:#292d3b;--text:#f4f4f7;--muted:#9da3b5;--accent:#9b75ff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 70% -10%,#28203e,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif;height:100dvh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;color:inherit}
+button:disabled{opacity:.5}
+.app{min-height:100dvh;display:grid;grid-template-columns:230px minmax(0,1fr)}
+.side{padding:18px 13px;background:#0c0d13;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;padding:5px}
+.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(145deg,#c1aaff,#7048d6);display:grid;place-items:center;font-size:25px;font-weight:900}
+.brand strong{letter-spacing:2.5px;font-size:19px}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px}
+.new,.nav{border:1px solid var(--line);background:#141620;border-radius:12px;padding:11px;text-align:left}
+.new{background:#211a32;border-color:#4b3b70}
+.nav{background:transparent;border-color:transparent;color:#c8cad6}
+.nav.active,.nav:hover{background:#191b26;border-color:var(--line)}
+.profile{margin-top:auto;border-top:1px solid var(--line);padding:14px 6px;display:flex;align-items:center;gap:10px}
+.avatar,.mini{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#29223d;color:#d2c3ff;font-weight:800;flex:none}
+.muted{color:var(--muted);font-size:12px}
+.main{display:flex;flex-direction:column;min-width:0;min-height:100dvh}
+.top{height:62px;flex:none;border-bottom:1px solid #242633;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#0b0c12}
+.online{font-size:11px;color:#a9e4c0}
+.online:before{content:"";display:inline-block;width:7px;height:7px;background:#62d995;border-radius:50%;margin-right:7px}
+.online.error{color:#ff9c9c}
+.online.error:before{background:#ff7777}
+.mobile{display:none}
+.content{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center}
+.chat{width:min(820px,100%);padding:24px;flex:1;display:flex;flex-direction:column;gap:16px}
+.welcome{margin:auto 0;text-align:center;padding:24px 0}
+.mark{margin:0 auto 18px;width:65px;height:65px;border:1px solid #59458a;border-radius:22px;background:#1d182b;display:grid;place-items:center;color:#c9b7ff;font-size:34px}
+.welcome h1{font-size:clamp(27px,4vw,38px);letter-spacing:-1px;margin:0 0 8px}
+.welcome p{color:var(--muted);margin:0 auto 24px}
+.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:550px;margin:auto}
+.suggestion{border:1px solid var(--line);background:#12141c;border-radius:14px;padding:13px;text-align:left}
+.suggestion:hover{border-color:#7657b6}
+.suggestion span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.bubble{white-space:pre-wrap;overflow-wrap:anywhere;max-width:88%;padding:12px 15px;background:#141620;border:1px solid #282b39;border-radius:4px 15px 15px 15px;line-height:1.65}
+.user .bubble{background:#211b32;border-color:#46365f;border-radius:15px 4px 15px 15px}
+.composer-wrap{width:min(820px,100%);padding:0 24px max(16px,env(safe-area-inset-bottom));margin:auto auto 0}
+.composer{border:1px solid #35394a;background:#13151e;border-radius:18px;padding:10px}
+.composer textarea{width:100%;resize:vertical;max-height:150px;min-height:44px;background:transparent;border:0;outline:0;color:var(--text);padding:7px}
+.bottom{display:flex;align-items:center;justify-content:space-between;padding:0 3px}
+.hint{font-size:10px;color:#858b9d}
+.send,.save,.primary{border:0;border-radius:11px;background:var(--accent);color:#100c1a;padding:9px 15px;font-weight:800}
+.fine{text-align:center;font-size:10px;color:#72788a;margin-top:7px}
+.panel{width:min(650px,100%);padding:26px 24px}
+.panel h1{font-size:28px;margin:0 0 4px}
+.panel p,.auth-wrap p{color:var(--muted)}
+.card{border:1px solid var(--line);background:#12141c;border-radius:15px;padding:18px;margin:17px 0}
+.field{margin:16px 0}
+.field label{display:flex;justify-content:space-between;margin-bottom:8px}
+.field input:not([type=range]),.field select{width:100%;padding:11px;background:#0c0d13;border:1px solid var(--line);border-radius:10px;color:var(--text)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.note{font-size:12px;padding:12px;border:1px solid #514326;background:#282216;border-radius:11px;color:#e6d2a2}
+.auth-wrap{width:min(430px,100%);margin:auto;padding:24px}
+.auth-wrap h1{margin:0 0 5px;font-size:30px}
+.auth-wrap input{display:block;width:100%;margin:12px 0;padding:13px;border:1px solid var(--line);background:#0c0d13;border-radius:10px;outline:none;color:var(--text)}
+.auth-wrap input:focus{border-color:var(--accent)}
+.auth-wrap button{width:100%;margin-top:10px}
+.auth-toggle{background:transparent;border:0;color:#c9b7ff;padding:10px}
+.notice{min-height:20px;margin:10px 0;color:#c9b7ff;overflow-wrap:anywhere;font-size:13px}
+@media(max-width:700px){
+.app{grid-template-columns:1fr}
+.side{position:fixed;z-index:4;inset:0 auto 0 0;width:260px;transform:translateX(-110%);transition:transform .2s;box-shadow:15px 0 45px #0008}
+.side.open{transform:translateX(0)}
+.mobile{display:inline-block;border:1px solid var(--line);background:#141620;border-radius:9px;padding:7px 10px;margin-right:9px}
+.top{padding:0 12px;height:58px}
+.chat{padding:16px 12px}
+.composer-wrap{padding:0 11px max(12px,env(safe-area-inset-bottom))}
+.suggestions{grid-template-columns:1fr}
+.panel{padding:20px 14px}
+.auth-wrap{padding:20px 14px}
 }
 </style>
 </head>
-
 <body>
 <div class="app">
-  <aside class="side" id="side">
-    <div class="brand">
-      <div class="logo">F</div>
-      <div>
-        <strong>FORGE</strong>
-        <small>AI WORKSPACE</small>
-      </div>
+<aside class="side" id="side">
+  <div class="brand"><div class="logo">F</div><div><strong>FORGE</strong><small>AI WORKSPACE</small></div></div>
+  <button class="new" id="newChat">＋ &nbsp; New chat</button>
+  <div class="muted" style="padding:0 9px;letter-spacing:1px">WORKSPACE</div>
+  <button class="nav active" data-page="chat">◈ &nbsp; AI Chat</button>
+  <button class="nav" data-page="settings">⚙ &nbsp; Personality settings</button>
+  <button class="nav" id="accountNav">♙ &nbsp; Account</button>
+  <div class="profile"><div class="avatar">F</div><div><b id="profileName">Forge Workspace</b><div class="muted" id="profileStatus">Checking account…</div></div></div>
+</aside>
+<main class="main">
+<header class="top">
+  <div><button class="mobile" id="menu">☰</button><b id="title">AI Chat</b></div>
+  <span class="online" id="status">Starting…</span>
+</header>
+<section class="content">
+  <div class="chat" id="chat"></div>
+  <div class="composer-wrap" id="composerWrap">
+    <div class="composer">
+      <textarea id="prompt" rows="1" placeholder="Message Forge…"></textarea>
+      <div class="bottom"><span class="hint">Enter to send · Shift+Enter for new line</span><button class="send" id="send">Send ↗</button></div>
     </div>
-
-    <button class="new" id="newChat">＋ &nbsp; New chat</button>
-
-    <div class="muted" style="padding:0 9px;letter-spacing:1px">WORKSPACE</div>
-
-    <button class="nav active" data-page="chat">◈ &nbsp; AI Chat</button>
-    <button class="nav" data-page="settings">⚙ &nbsp; Personality settings</button>
-    <button class="nav" id="accountNav">♙ &nbsp; Account</button>
-
-    <div class="profile">
-      <div class="avatar">F</div>
-      <div>
-        <b id="profileName">Forge Workspace</b>
-        <div class="muted" id="profileStatus">Checking account…</div>
-      </div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="top">
-      <div>
-        <button class="mobile" id="menu">☰</button>
-        <b id="title">AI Chat</b>
-      </div>
-      <span class="online" id="status">Checking backend…</span>
-    </header>
-
-    <section class="content">
-      <div class="chat" id="chat"></div>
-
-      <div class="composer-wrap" id="composerWrap">
-        <div class="composer">
-          <textarea id="prompt" rows="1" placeholder="Message Forge…"></textarea>
-          <div class="bottom">
-            <span class="hint">Enter to send · Shift+Enter for new line</span>
-            <button class="send" id="send">Send ↗</button>
-          </div>
-        </div>
-        <div class="fine">Forge AI · Your assistant workspace</div>
-      </div>
-    </section>
-  </main>
+    <div class="fine">Forge AI · Your assistant workspace</div>
+  </div>
+</section>
+</main>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 'use strict';
@@ -516,99 +119,82 @@ const API_BASE_URL = 'https://forge-a.onrender.com';
 const SUPABASE_URL = 'https://fspxuvdmjuhbmlplweww.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_P9U49Fe6FWnPOHkbkHtmfA_bqQBDeJ7';
 
-const chat = document.querySelector('#chat');
-const box = document.querySelector('#prompt');
-const statusEl = document.querySelector('#status');
+const $ = selector => document.querySelector(selector);
+const chat = $('#chat');
+const box = $('#prompt');
+const statusEl = $('#status');
 
 let messages = [];
 let page = 'chat';
 let currentUser = null;
 let authMode = 'signin';
 let busy = false;
+let authClient = null;
 
-const authClient = window.supabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
-
+/* Update status without waiting for account authentication. */
 function setStatus(text, error = false) {
   statusEl.textContent = text;
   statusEl.classList.toggle('error', error);
 }
 
-async function checkBackend() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/health`, {
-      method: 'GET',
-      cache: 'no-store',
-      signal: AbortSignal.timeout(10000)
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+/* Load Supabase separately so a slow or unavailable CDN cannot freeze Forge. */
+function loadSupabase() {
+  return new Promise(resolve => {
+    if (window.supabase) {
+      try {
+        authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        resolve(authClient);
+        return;
+      } catch (e) {
+        resolve(null);
+        return;
+      }
     }
 
-    const data = await response.json();
-
-    if (!data.ok) {
-      throw new Error('Unexpected health response');
-    }
-
-    setStatus('Backend online');
-    return true;
-  } catch (error) {
-    setStatus('Backend unavailable', true);
-    return false;
-  }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.async = true;
+    script.onload = () => {
+      try {
+        authClient = window.supabase
+          ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+          : null;
+      } catch (e) {
+        authClient = null;
+      }
+      resolve(authClient);
+    };
+    script.onerror = () => resolve(null);
+    document.head.appendChild(script);
+    setTimeout(() => resolve(authClient), 8000);
+  });
 }
 
 function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>"']/g, character => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[character]);
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
 }
 
 function updateProfile() {
-  document.querySelector('#profileName').textContent =
-    currentUser ? (currentUser.email || 'Forge user') : 'Forge Workspace';
-
-  document.querySelector('#profileStatus').textContent =
-    currentUser ? 'Signed in' : 'Not signed in';
+  $('#profileName').textContent = currentUser
+    ? (currentUser.email || 'Forge user')
+    : 'Forge Workspace';
+  $('#profileStatus').textContent = currentUser ? 'Signed in' : 'Not signed in';
 }
 
 function welcome() {
-  return `
-    <div class="welcome">
-      <div class="mark">✦</div>
-      <h1>What are we building today?</h1>
-      <p>Your workspace for ideas, problem-solving, writing, and code.</p>
-
-      <div class="suggestions">
-        <button class="suggestion" data-prompt="Help me plan an Android app">
-          <b>▣ Build an app</b>
-          <span>Plan an app from scratch</span>
-        </button>
-
-        <button class="suggestion" data-prompt="Help me debug this code: ">
-          <b>⌘ Code with me</b>
-          <span>Work through a coding problem</span>
-        </button>
-
-        <button class="suggestion" data-prompt="Brainstorm creative ideas for ">
-          <b>✧ Brainstorm ideas</b>
-          <span>Explore possibilities</span>
-        </button>
-
-        <button class="suggestion" data-prompt="Explain this topic simply: ">
-          <b>⌁ Learn something</b>
-          <span>Make a hard topic clearer</span>
-        </button>
-      </div>
+  return `<div class="welcome">
+    <div class="mark">✦</div>
+    <h1>What are we building today?</h1>
+    <p>Your workspace for ideas, problem-solving, writing, and code.</p>
+    <div class="suggestions">
+      <button class="suggestion" data-prompt="Help me plan an Android app"><b>▣ Build an app</b><span>Plan an app from scratch</span></button>
+      <button class="suggestion" data-prompt="Help me debug this code: "><b>⌘ Code with me</b><span>Work through a coding problem</span></button>
+      <button class="suggestion" data-prompt="Brainstorm creative ideas for "><b>✧ Brainstorm ideas</b><span>Explore possibilities</span></button>
+      <button class="suggestion" data-prompt="Explain this topic simply: "><b>⌁ Learn something</b><span>Make a hard topic clearer</span></button>
     </div>
-  `;
+  </div>`;
 }
 
 function bindSuggestions() {
@@ -621,68 +207,54 @@ function bindSuggestions() {
 }
 
 function render() {
-  chat.innerHTML = messages.length
-    ? messages.map(message => `
-        <div class="msg ${message.role === 'user' ? 'user' : ''}">
-          <div class="mini">${message.role === 'user' ? 'Y' : 'F'}</div>
-          <div class="bubble"></div>
-        </div>
-      `).join('')
-    : welcome();
-
-  if (messages.length) {
-    chat.querySelectorAll('.bubble').forEach((element, index) => {
-      element.textContent = messages[index].content;
-    });
-
-    chat.scrollTop = chat.scrollHeight;
-  } else {
+  if (!messages.length) {
+    chat.innerHTML = welcome();
     bindSuggestions();
+    return;
   }
+
+  chat.innerHTML = messages.map(message =>
+    `<div class="msg ${message.role === 'user' ? 'user' : ''}">
+      <div class="mini">${message.role === 'user' ? 'Y' : 'F'}</div>
+      <div class="bubble"></div>
+    </div>`
+  ).join('');
+
+  chat.querySelectorAll('.bubble').forEach((element, index) => {
+    element.textContent = messages[index].content;
+  });
+  chat.scrollTop = chat.scrollHeight;
 }
 
-function pageTo(nextPage) {
-  page = nextPage;
-
-  document.querySelector('#title').textContent =
-    nextPage === 'chat'
-      ? 'AI Chat'
-      : nextPage === 'settings'
-        ? 'Personality settings'
-        : 'Account';
+function pageTo(next) {
+  page = next;
+  $('#title').textContent =
+    next === 'chat' ? 'AI Chat' :
+    next === 'settings' ? 'Personality settings' : 'Account';
 
   document.querySelectorAll('.nav[data-page]').forEach(button => {
-    button.classList.toggle('active', button.dataset.page === nextPage);
+    button.classList.toggle('active', button.dataset.page === next);
   });
 
-  document.querySelector('#composerWrap').style.display =
-    nextPage === 'chat' ? 'block' : 'none';
+  $('#composerWrap').style.display = next === 'chat' ? 'block' : 'none';
+  $('#side').classList.remove('open');
 
-  document.querySelector('#side').classList.remove('open');
-
-  if (nextPage === 'chat') {
-    render();
-  } else if (nextPage === 'settings') {
-    settings();
-  } else {
-    accountPage();
-  }
+  if (next === 'chat') render();
+  else if (next === 'settings') settingsPage();
+  else accountPage();
 }
 
 document.querySelectorAll('.nav[data-page]').forEach(button => {
   button.onclick = () => pageTo(button.dataset.page);
 });
 
-document.querySelector('#menu').onclick = () => {
-  document.querySelector('#side').classList.toggle('open');
-};
-
-document.querySelector('#newChat').onclick = () => {
+$('#menu').onclick = () => $('#side').classList.toggle('open');
+$('#newChat').onclick = () => {
   messages = [];
   pageTo('chat');
 };
-
-document.querySelector('#accountNav').onclick = () => pageTo('account');
+$('#accountNav').onclick = () => pageTo('account');
+$('#send').onclick = send;
 
 box.addEventListener('keydown', event => {
   if (event.key === 'Enter' && !event.shiftKey) {
@@ -691,38 +263,56 @@ box.addEventListener('keydown', event => {
   }
 });
 
-document.querySelector('#send').onclick = send;
-
-function getPreferences() {
-  let preferences = {};
-
+function preferences() {
+  let saved = {};
   try {
-    preferences = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
+    saved = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
   } catch {}
 
   return {
-    personality: String(preferences.style || 'Balanced and helpful'),
-    humor: `${Number(preferences.humor ?? 30)}%`,
-    detail: Number(preferences.creativity ?? 70) >= 65
-      ? 'detailed'
-      : 'balanced',
-    instructionFollowing: Math.max(
-      0,
-      Math.min(100, Number(preferences.obedience ?? 80))
-    )
+    personality: String(saved.style || 'Balanced and helpful'),
+    humor: Number(saved.humor ?? 30),
+    detail: Number(saved.creativity ?? 70) >= 65 ? 'detailed' : 'balanced',
+    instructionFollowing: Number(saved.obedience ?? 80)
   };
+}
+
+async function checkBackend() {
+  setStatus('Checking backend…');
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(`${API_BASE_URL}/health?check=${Date.now()}`, {
+      method: 'GET',
+      cache: 'no-store',
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
+    if (!data.ok) throw new Error('Unexpected health response');
+
+    setStatus('Backend online');
+    return true;
+  } catch (error) {
+    setStatus('Backend unavailable', true);
+    return false;
+  }
 }
 
 async function send() {
   const text = box.value.trim();
-
   if (!text || busy) return;
 
   if (!authClient) {
-    setStatus('Supabase unavailable', true);
     messages.push({
       role: 'assistant',
-      content: 'Supabase did not load. Refresh the page and check your internet connection.'
+      content: 'Supabase authentication could not load. Check your internet connection and reload Forge.'
     });
     render();
     return;
@@ -734,24 +324,18 @@ async function send() {
     return;
   }
 
-  let sessionData;
-
+  let session;
   try {
     const result = await authClient.auth.getSession();
-
     if (result.error) throw result.error;
-
-    sessionData = result.data;
+    session = result.data.session;
   } catch (error) {
-    messages.push({
-      role: 'assistant',
-      content: `Could not verify your session: ${error.message}`
-    });
+    messages.push({ role: 'assistant', content: `Session check failed: ${error.message}` });
     render();
     return;
   }
 
-  if (!sessionData?.session) {
+  if (!session) {
     currentUser = null;
     updateProfile();
     pageTo('account');
@@ -764,36 +348,37 @@ async function send() {
   render();
 
   busy = true;
-  document.querySelector('#send').disabled = true;
+  $('#send').disabled = true;
   setStatus('Forge is thinking…');
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 65000);
+
     const response = await fetch(`${API_BASE_URL}/v1/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sessionData.session.access_token}`
+        'Authorization': `Bearer ${session.access_token}`
       },
       body: JSON.stringify({
         messages: messages.map(message => ({
           role: message.role,
           content: message.content
         })),
-        personality: getPreferences()
+        personality: preferences()
       }),
-      signal: AbortSignal.timeout(65000)
+      signal: controller.signal
     });
 
-    const data = await response.json().catch(() => ({}));
+    clearTimeout(timeout);
 
-    if (!response.ok) {
-      throw new Error(data.error || `Server returned HTTP ${response.status}`);
-    }
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
 
     const reply = data.reply || data.message || data.output;
-
     if (typeof reply !== 'string' || !reply.trim()) {
-      throw new Error('Backend returned an empty reply.');
+      throw new Error('The backend returned an empty response.');
     }
 
     messages.push({ role: 'assistant', content: reply });
@@ -801,135 +386,146 @@ async function send() {
   } catch (error) {
     messages.push({
       role: 'assistant',
-      content:
-        `I couldn't complete that request: ${error.message}\n\n` +
-        'Check the Render backend, AI provider settings, and Supabase authentication.'
+      content: `Request failed: ${error.message}\n\nCheck the backend and AI provider configuration.`
     });
-
     setStatus('Chat request failed', true);
   } finally {
     busy = false;
-    document.querySelector('#send').disabled = false;
+    $('#send').disabled = false;
     render();
   }
 }
 
-function settings() {
-  let stored = {};
-
+function settingsPage() {
+  let saved = {};
   try {
-    stored = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
+    saved = JSON.parse(localStorage.getItem('forge-prefs') || '{}');
   } catch {}
 
-  const preferences = {
-    style: stored.style || 'Balanced and helpful',
-    humor: Number(stored.humor ?? 30),
-    obedience: Number(stored.obedience ?? 80),
-    creativity: Number(stored.creativity ?? 70)
+  const values = {
+    style: saved.style || 'Balanced and helpful',
+    humor: Number(saved.humor ?? 30),
+    obedience: Number(saved.obedience ?? 80),
+    creativity: Number(saved.creativity ?? 70)
   };
 
-  chat.innerHTML = `
-    <div class="panel">
-      <h1>Personality</h1>
-      <p>Shape how Forge communicates with you.</p>
-
-      <div class="card">
-        <b>Response style</b>
-
-        <div class="field">
-          <label for="style">Personality</label>
-
-          <select id="style">
-            <option>Balanced and helpful</option>
-            <option>Professional and precise</option>
-            <option>Creative and imaginative</option>
-            <option>Casual and friendly</option>
-            <option>Concise and direct</option>
-          </select>
-        </div>
-
-        ${[
-          ['humor', 'Humor'],
-          ['obedience', 'Instruction following'],
-          ['creativity', 'Creativity']
-        ].map(([id, label]) => `
-          <div class="field">
-            <label for="${id}">
-              ${label}
-              <span id="${id}v">${preferences[id]}%</span>
-            </label>
-            <input
-              id="${id}"
-              type="range"
-              min="0"
-              max="100"
-              value="${preferences[id]}"
-            >
-          </div>
-        `).join('')}
-
-        <button class="save" id="save">Save preferences</button>
-        <span id="saved" class="muted"></span>
+  chat.innerHTML = `<div class="panel">
+    <h1>Personality</h1>
+    <p>Shape how Forge communicates with you.</p>
+    <div class="card">
+      <div class="field">
+        <label for="style">Personality</label>
+        <select id="style">
+          <option>Balanced and helpful</option>
+          <option>Professional and precise</option>
+          <option>Creative and imaginative</option>
+          <option>Casual and friendly</option>
+          <option>Concise and direct</option>
+        </select>
       </div>
-
-      <div class="note">
-        Preferences are saved in this browser and sent with chat requests.
-      </div>
+      ${[['humor','Humor'],['obedience','Instruction following'],['creativity','Creativity']].map(([id,label]) =>
+        `<div class="field">
+          <label for="${id}">${label}<span id="${id}v">${values[id]}%</span></label>
+          <input id="${id}" type="range" min="0" max="100" value="${values[id]}">
+        </div>`
+      ).join('')}
+      <button class="save" id="save">Save preferences</button>
+      <span id="saved" class="muted"></span>
     </div>
-  `;
+    <div class="note">Preferences are saved in this browser and sent with chat requests.</div>
+  </div>`;
 
-  document.querySelector('#style').value = preferences.style;
+  $('#style').value = values.style;
 
-  ['humor', 'obedience', 'creativity'].forEach(id => {
-    document.querySelector('#' + id).oninput = event => {
-      document.querySelector('#' + id + 'v').textContent =
-        event.target.value + '%';
+  ['humor','obedience','creativity'].forEach(id => {
+    $('#' + id).oninput = event => {
+      $('#' + id + 'v').textContent = event.target.value + '%';
     };
   });
 
-  document.querySelector('#save').onclick = () => {
-    const values = {
-      style: document.querySelector('#style').value
-    };
-
-    ['humor', 'obedience', 'creativity'].forEach(id => {
-      values[id] = Number(document.querySelector('#' + id).value);
+  $('#save').onclick = () => {
+    const data = { style: $('#style').value };
+    ['humor','obedience','creativity'].forEach(id => {
+      data[id] = Number($('#' + id).value);
     });
 
     try {
-      localStorage.setItem('forge-prefs', JSON.stringify(values));
-      document.querySelector('#saved').textContent = 'Saved ✓';
+      localStorage.setItem('forge-prefs', JSON.stringify(data));
+      $('#saved').textContent = 'Saved ✓';
     } catch {
-      document.querySelector('#saved').textContent = 'Could not save.';
+      $('#saved').textContent = 'Could not save preferences.';
     }
   };
 }
 
 function accountPage(message = '') {
   if (!authClient) {
-    chat.innerHTML = `
-      <div class="auth-wrap">
-        <h1>Account unavailable</h1>
-        <p>Supabase client did not load. Refresh and try again.</p>
-      </div>
-    `;
+    chat.innerHTML = `<div class="auth-wrap">
+      <h1>Account unavailable</h1>
+      <p>Supabase did not load. Reload Forge and try again.</p>
+      <div class="notice">${escapeHTML(message)}</div>
+    </div>`;
     return;
   }
 
   if (currentUser) {
-    chat.innerHTML = `
-      <div class="auth-wrap">
-        <h1>Your account</h1>
-        <p>You are signed in to Forge.</p>
-
-        <div class="card">
-          <b>Email</b>
-          <p>${escapeHTML(currentUser.email || 'Account')}</p>
-          <button class="primary" id="signOut">Sign out</button>
-          <div class="notice" id="authNotice"></div>
-        </div>
+    chat.innerHTML = `<div class="auth-wrap">
+      <h1>Your account</h1>
+      <p>You are signed in to Forge.</p>
+      <div class="card">
+        <b>Email</b><p>${escapeHTML(currentUser.email || 'Account')}</p>
+        <button class="primary" id="signOut">Sign out</button>
+        <div class="notice" id="authNotice"></div>
       </div>
-    `;
+    </div>`;
 
-    document.querySelector('#signOut').onclick = async () => {
-      const { error } = await authClient
+    $('#signOut').onclick = async () => {
+      const result = await authClient.auth.signOut();
+      if (result.error) {
+        $('#authNotice').textContent = result.error.message;
+        return;
+      }
+      currentUser = null;
+      updateProfile();
+      accountPage('You have signed out.');
+    };
+    return;
+  }
+
+  chat.innerHTML = `<div class="auth-wrap">
+    <h1>${authMode === 'signin' ? 'Welcome back' : 'Create your Forge account'}</h1>
+    <p>${authMode === 'signin' ? 'Sign in to start chatting with Forge.' : 'Create an account for your AI workspace.'}</p>
+    <form id="authForm">
+      <input id="email" type="email" autocomplete="email" placeholder="Email address" required>
+      <input id="password" type="password" autocomplete="${authMode === 'signin' ? 'current-password' : 'new-password'}" placeholder="Password (at least 6 characters)" minlength="6" required>
+      <button class="primary" id="authSubmit" type="submit">${authMode === 'signin' ? 'Sign in' : 'Create account'}</button>
+    </form>
+    <button class="auth-toggle" id="toggleAuth">${authMode === 'signin' ? 'Need an account? Sign up' : 'Already have an account? Sign in'}</button>
+    <div class="notice" id="authNotice">${escapeHTML(message)}</div>
+  </div>`;
+
+  $('#toggleAuth').onclick = () => {
+    authMode = authMode === 'signin' ? 'signup' : 'signin';
+    accountPage();
+  };
+
+  $('#authForm').onsubmit = async event => {
+    event.preventDefault();
+
+    const notice = $('#authNotice');
+    const submit = $('#authSubmit');
+    const email = $('#email').value.trim();
+    const password = $('#password').value;
+
+    submit.disabled = true;
+    notice.textContent = 'Please wait…';
+
+    try {
+      if (authMode === 'signup') {
+        const result = await authClient.auth.signUp({ email, password });
+        if (result.error) throw result.error;
+
+        if (result.data.session && result.data.user) {
+          currentUser = result.data.user;
+          updateProfile();
+          pag
